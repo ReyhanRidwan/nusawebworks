@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  
+  --color-brand-primary: #14b8a6; /* Tosca */
+  --color-brand-secondary: #22c55e; /* Green */
+  --color-brand-soft: #f0fdfa;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-[#1a1a1a] bg-white antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight shrink-0;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+  
+  .premium-shadow {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-emerald-500;
+  }
+
+  .btn-primary {
+    @apply px-8 py-4 bg-teal-600 text-white rounded-full font-medium transition-all hover:bg-teal-700 hover:scale-105 active:scale-95 shadow-lg shadow-teal-600/20 flex items-center justify-center gap-2;
+  }
+
+  .btn-outline {
+    @apply px-8 py-4 border-2 border-teal-600 text-teal-600 rounded-full font-medium transition-all hover:bg-teal-50 hover:scale-105 active:scale-95 flex items-center justify-center gap-2;
+  }
+
+  .bg-dashed-teal {
+    background-image: linear-gradient(to right, #0d9488 50%, transparent 50%);
+    background-size: 20px 1px;
+    background-repeat: repeat-x;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-50;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-teal-200 rounded-full hover:bg-teal-300 transition-colors;
+}
