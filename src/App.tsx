@@ -117,11 +117,11 @@ const portfolioItems: PortfolioItem[] = [
     title: "Plantastics Garden", 
     category: "Garden/Florist", 
     description: "E-commerce tanaman hias modern dan edukasi perawatan tanaman untuk pecinta alam.", 
-    image: "/src/assets/images/regenerated_image_1778250166735.png",
+    image: "/assets/images/regenerated_image_1778250166735.png",
     link: "https://plantasticgarden.lovable.app/"
   },
-  { title: "Nusantara Coffee", category: "Cafe", description: "Aesthetic cafe website for the digital generation.", image: "/src/assets/images/regenerated_image_1778250169678.png", link: "https://di-sebelah-rumah.vercel.app/" },
-  { title: "Sakti Contractor", category: "Kontraktor", description: "Professional portfolio for construction branding.", image: "/src/assets/images/regenerated_image_1778249458862.png" },
+  { title: "Nusantara Coffee", category: "Cafe", description: "Aesthetic cafe website for the digital generation.", image: "/assets/images/regenerated_image_1778250169678.png", link: "https://di-sebelah-rumah.vercel.app/" },
+  { title: "Sakti Contractor", category: "Kontraktor", description: "Professional portfolio for construction branding.", image: "/assets/images/regenerated_image_1778249458862.png" },
   { title: "Luxe Fashion", category: "Fashion", description: "Minimalist online shop for luxury apparel.", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop" },
   { title: "Advisory Legal", category: "Jasa", description: "Trustworthy corporate identity for law firms.", image: "https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=800&auto=format&fit=crop" },
   { title: "Fresh Groceries", category: "Ecommerce", description: "Fast-loading app for daily essentials.", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop" },
@@ -204,7 +204,7 @@ const faqs: FAQItem[] = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const logoUrl = "/src/assets/images/regenerated_image_1778251094488.jpg";
+  const logoUrl = "https://scontent.xx.fbcdn.net/v/t1.15752-9/685723216_2029139328017612_8112902953639267516_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=9f807c&_nc_ohc=_OLGFQspricQ7kNvwH7I9gF&_nc_oc=AdoC0Mlk2miJRk37sqYUpr05xmHOITrDaVYnivobZFf7sqoJfBrTTnej7SN-JKaC2Ihl5TSal9TIEynh3fWWy59d&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD5QEregPxwY88Mz8Alr0JrQyG6iWTwxtQCTQTiIH5_Rv_Gw&oe=6A2670D7";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -558,7 +558,7 @@ export default function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="group relative rounded-3xl overflow-hidden aspect-[4/5]"
+                className="group relative rounded-3xl overflow-hidden aspect-video"
                >
                  <img 
                    id={`portfolio-image-${idx}`}
@@ -607,7 +607,7 @@ export default function App() {
                <div className="absolute top-6 left-6 z-10 px-4 py-1 bg-red-500 text-white text-xs font-bold rounded-full uppercase">Sebelum</div>
                <img 
                  id="before-image"
-                 src="/src/assets/images/regenerated_image_1778250161202.png" 
+                 src="/assets/images/regenerated_image_1778250161202.png" 
                  alt="Old Website Version" 
                  className="aspect-video w-full object-cover opacity-50 grayscale" 
                />
@@ -621,7 +621,7 @@ export default function App() {
                <div className="absolute top-6 left-6 z-10 px-4 py-1 bg-teal-500 text-white text-xs font-bold rounded-full uppercase">Sesudah</div>
                <img 
                  id="after-image"
-                 src="/src/assets/images/regenerated_image_1778250163733.png" 
+                 src="/assets/images/regenerated_image_1778250163733.png" 
                  alt="Premium Website" 
                  className="aspect-video w-full object-cover" 
                />
@@ -839,7 +839,7 @@ export default function App() {
             <div className="lg:col-span-1">
               <a href="#" className="flex items-center gap-2 mb-6">
                 <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-teal-600/20">
-                  <img src="/src/assets/images/regenerated_image_1778251093943.jpg" alt="NusaWebWorks Logo" className="w-full h-full object-cover" />
+                  <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/685723216_2029139328017612_8112902953639267516_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=9f807c&_nc_ohc=_OLGFQspricQ7kNvwH7I9gF&_nc_oc=AdoC0Mlk2miJRk37sqYUpr05xmHOITrDaVYnivobZFf7sqoJfBrTTnej7SN-JKaC2Ihl5TSal9TIEynh3fWWy59d&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD5QEregPxwY88Mz8Alr0JrQyG6iWTwxtQCTQTiIH5_Rv_Gw&oe=6A2670D7" alt="NusaWebWorks Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 </div>
                 <span className="text-2xl font-display font-bold tracking-tight text-slate-900">NusaWebWorks</span>
               </a>
@@ -891,7 +891,14 @@ export default function App() {
                 </li>
                 <li className="flex flex-col">
                    <span className="text-[10px] uppercase font-bold text-teal-600 mb-1">Instagram</span>
-                   <a href="https://instagram.com/nusawebworks" className="hover:text-teal-600">@nusawebworks</a>
+                   <a 
+                      href="https://instagram.com/nusawebworks" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="hover:text-teal-600"
+                    >
+                      @nusawebworks
+                    </a>
                 </li>
                 <li className="flex flex-col">
                    <span className="text-[10px] uppercase font-bold text-teal-600 mb-1">Email</span>
