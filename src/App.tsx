@@ -18,9 +18,12 @@ import {
   ExternalLink,
   Zap,
   Globe,
-  Monitor
+  Monitor,
+  Maximize2,
+  ChevronLeft,
+  Link2
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import React from 'react';
 
 // --- Types ---
@@ -41,7 +44,8 @@ interface PortfolioItem {
   category: string;
   description: string;
   image: string;
-  link?: string;
+  link: string;
+  displayLink: string;
 }
 
 interface PricingPlan {
@@ -65,10 +69,12 @@ interface FAQItem {
 }
 
 // --- Data ---
+const COMPANY_LOGO_URL = "https://res.cloudinary.com/di6ziqvtp/image/upload/v1795095370/af4f7f80-007a-47b0-9b49-7a6ded05c6c7.png";
+
 const navLinks: NavLink[] = [
   { name: "Services", href: "#services" },
+  { name: "Testimoni", href: "#testimoni" },
   { name: "Portfolio", href: "#portfolio" },
-  { name: "Proses", href: "#process" },
   { name: "Harga", href: "#pricing" },
   { name: "FAQ", href: "#faq" },
 ];
@@ -112,19 +118,119 @@ const services: Service[] = [
   }
 ];
 
-const portfolioItems: PortfolioItem[] = [
-  { 
-    title: "Plantastics Garden", 
-    category: "Garden/Florist", 
-    description: "E-commerce tanaman hias modern dan edukasi perawatan tanaman untuk pecinta alam.", 
-    image: "/assets/images/regenerated_image_1778250166735.png",
-    link: "https://plantasticgarden.lovable.app/"
+const whatsappTestimonials = [
+  {
+    id: 1,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096686/50205bbf-489c-447c-b814-b8e66aa5f245.png",
+    label: "Testimoni Klien 01"
   },
-  { title: "Nusantara Coffee", category: "Cafe", description: "Aesthetic cafe website for the digital generation.", image: "/assets/images/regenerated_image_1778250169678.png", link: "https://di-sebelah-rumah.vercel.app/" },
-  { title: "Sakti Contractor", category: "Kontraktor", description: "Professional portfolio for construction branding.", image: "/assets/images/regenerated_image_1778249458862.png" },
-  { title: "Luxe Fashion", category: "Fashion", description: "Minimalist online shop for luxury apparel.", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop" },
-  { title: "Advisory Legal", category: "Jasa", description: "Trustworthy corporate identity for law firms.", image: "https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=800&auto=format&fit=crop" },
-  { title: "Fresh Groceries", category: "Ecommerce", description: "Fast-loading app for daily essentials.", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop" },
+  {
+    id: 2,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096689/4c8175f8-331e-4e04-a906-e2277e1459a0.png",
+    label: "Testimoni Klien 02"
+  },
+  {
+    id: 3,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096696/744594e9-2aa5-4fd6-b70c-f4fa77172f34.png",
+    label: "Testimoni Klien 03"
+  },
+  {
+    id: 4,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096702/6c766541-d35d-4459-b77a-b63f97f6904f.png",
+    label: "Testimoni Klien 04"
+  },
+  {
+    id: 5,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096707/2525bf94-bafe-4430-8f38-68984d4cebf7.png",
+    label: "Testimoni Klien 05"
+  },
+  {
+    id: 6,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096715/c847fd81-a583-43e3-bb36-30490c57d94e.png",
+    label: "Testimoni Klien 06"
+  },
+  {
+    id: 7,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096721/3b7dadd7-96be-46ce-a18c-a72226923633.png",
+    label: "Testimoni Klien 07"
+  },
+  {
+    id: 8,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096727/72235c5b-e7b5-4b0c-ac70-f9ef2b4ffbdf.png",
+    label: "Testimoni Klien 08"
+  },
+  {
+    id: 9,
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096767/b6e3a875-4bf2-4b10-a314-d776f5ef65e8.png",
+    label: "Testimoni Klien 09"
+  }
+];
+
+const portfolioItems: PortfolioItem[] = [
+  {
+    title: "Andika Bali Tour",
+    category: "Travel & Tour Bali",
+    description: "Website paket wisata dan layanan tour driver profesional di Bali dengan booking langsung via WhatsApp.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096101/1866b056-efb5-4b11-9a65-cc29ea1d0355.png",
+    link: "https://andikabalitour.com/",
+    displayLink: "andikabalitour.com"
+  },
+  {
+    title: "Gede Bali Trip",
+    category: "Travel & Private Tour",
+    description: "Platform reservasi perjalanan wisata Bali yang elegan untuk wisatawan domestik maupun mancanegara.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096148/72f45e89-e3a6-4eed-b169-ed854f56576d.png",
+    link: "https://gedebalitrip.com/",
+    displayLink: "gedebalitrip.com"
+  },
+  {
+    title: "Bali Niki Tour",
+    category: "Wisata & Transportasi",
+    description: "Company profile jasa tour & sewa mobil Bali dengan katalog paket wisata yang terstruktur rapi.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096152/1e68867e-052e-4f93-ab4b-1f43d7c074c1.png",
+    link: "https://balinikitour.com/",
+    displayLink: "balinikitour.com"
+  },
+  {
+    title: "Berlian Kontraktor",
+    category: "Kontraktor & Konstruksi",
+    description: "Website profil perusahaan konstruksi dan renovasi bangunan untuk meningkatkan kepercayaan klien proyek.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096190/b563bd9a-6053-41ee-9bab-f7e266f7c80a.png",
+    link: "https://berliankontraktor.com/",
+    displayLink: "berliankontraktor.com"
+  },
+  {
+    title: "Rizal Konstruksi",
+    category: "Jasa Bangun & Renovasi",
+    description: "Tampilan bisnis konstruksi modern yang menampilkan portofolio proyek dan konsultasi RAB cepat.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096213/128fc465-2139-46ee-b9d8-d685e9fb6961.png",
+    link: "https://www.rizalkonstruksi.com/",
+    displayLink: "rizalkonstruksi.com"
+  },
+  {
+    title: "98 Florist",
+    category: "Florist & Karangan Bunga",
+    description: "Katalog toko bunga online dengan pemesanan papan bunga dan buket cepat langsung ke WhatsApp.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096236/4d9d5f47-a643-42f1-a318-34d7cb13de8d.png",
+    link: "https://www.98florist.my.id/",
+    displayLink: "98florist.my.id"
+  },
+  {
+    title: "Aksara Landscape",
+    category: "Jasa Taman & Landscape",
+    description: "Showcase desain taman dan arsitektur lanskap profesional untuk hunian maupun area komersial.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096247/b63489c7-bee0-4d07-81b5-cb6de6a3b17c.png",
+    link: "https://www.aksaralandscape.com/",
+    displayLink: "aksaralandscape.com"
+  },
+  {
+    title: "Surya Taman",
+    category: "Tukang Taman & Kolam",
+    description: "Website layanan pembuatan taman, vertikal garden, dan kolam koi dengan galeri hasil pengerjaan.",
+    image: "https://res.cloudinary.com/ypvr42cl/image/upload/v1795096285/22f8b00d-5a30-4200-bb3b-6a9ffc89f002.png",
+    link: "https://www.suryataman.id/",
+    displayLink: "suryataman.id"
+  }
 ];
 
 const pricingPlans: PricingPlan[] = [
@@ -204,7 +310,6 @@ const faqs: FAQItem[] = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const logoUrl = "https://scontent.xx.fbcdn.net/v/t1.15752-9/685723216_2029139328017612_8112902953639267516_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=9f807c&_nc_ohc=_OLGFQspricQ7kNvwH7I9gF&_nc_oc=AdoC0Mlk2miJRk37sqYUpr05xmHOITrDaVYnivobZFf7sqoJfBrTTnej7SN-JKaC2Ihl5TSal9TIEynh3fWWy59d&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD5QEregPxwY88Mz8Alr0JrQyG6iWTwxtQCTQTiIH5_Rv_Gw&oe=6A2670D7";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -213,19 +318,19 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/80 backdrop-blur-md border-b border-gray-100 py-3" : "bg-transparent py-5"}`}>
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        <a href="#" className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-teal-600/20">
-            <img src={logoUrl} alt="NusaWebWorks Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-md border-b border-gray-100 py-3" : "bg-transparent py-4"}`}>
+      <div className="container mx-auto px-6 flex justify-between items-center gap-8">
+        <a href="#" className="flex items-center gap-2.5 whitespace-nowrap shrink-0">
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white border border-slate-100 shadow-sm shrink-0">
+            <img src={COMPANY_LOGO_URL} alt="NusaWebWorks Logo" className="w-full h-full object-contain p-0.5" referrerPolicy="no-referrer" />
           </div>
-          <span className="text-2xl font-display font-bold tracking-tight text-slate-900">NusaWebWorks</span>
+          <span className="text-xl md:text-2xl font-display font-bold tracking-tight text-slate-900">NusaWebWorks</span>
         </a>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => (
-            <a key={link.name} href={link.href} className="text-slate-600 hover:text-teal-600 font-medium transition-colors">
+            <a key={link.name} href={link.href} className="text-slate-600 hover:text-teal-600 font-medium transition-colors whitespace-nowrap shrink-0">
               {link.name}
             </a>
           ))}
@@ -286,6 +391,15 @@ const WhatsAppButton = () => (
 );
 
 export default function App() {
+  const [selectedTestiIndex, setSelectedTestiIndex] = useState<number | null>(null);
+  const waSliderRef = useRef<HTMLDivElement>(null);
+
+  const scrollWaSlider = (direction: "prev" | "next") => {
+    if (!waSliderRef.current) return;
+    const distance = direction === "prev" ? -320 : 320;
+    waSliderRef.current.scrollBy({ left: distance, behavior: "smooth" });
+  };
+
   return (
     <div className="overflow-hidden">
       <Navbar />
@@ -347,13 +461,14 @@ export default function App() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="relative z-10"
               >
-                <div className="relative rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border-8 border-white">
+                <div className="relative rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border-8 border-white bg-slate-100 aspect-video">
                   <img 
-                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" 
-                    alt="Premium Dashboard Mockup" 
+                    src="/assets/images/regenerated_image_1778250163733.png" 
+                    alt="Premium Website Mockup" 
                     className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent pointer-events-none"></div>
                 </div>
                 
                 {/* Floating Badges */}
@@ -398,6 +513,72 @@ export default function App() {
               <div className="absolute -top-20 -right-20 w-80 h-80 bg-teal-400/20 rounded-full blur-[100px]"></div>
               <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-emerald-400/20 rounded-full blur-[100px]"></div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 1.5 WhatsApp Testimonials Section (9:16 Vertical Screenshots) */}
+      <section id="testimoni" className="py-20 bg-slate-50 border-t border-slate-100">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div className="max-w-2xl">
+              <p className="text-xs uppercase font-bold text-teal-600 tracking-widest mb-3">Bukti Nyata Kepuasan Klien</p>
+              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4" style={{ textWrap: "balance" }}>
+                Testimoni Asli via WhatsApp
+              </h2>
+              <p className="text-slate-600 text-base md:text-lg">
+                Respon langsung dari para pelaku usaha dan pemilik bisnis setelah website mereka selesai dan mulai beroperasi. Klik gambar untuk melihat lebih jelas.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => scrollWaSlider("prev")}
+                aria-label="Geser testimoni ke kiri"
+                className="w-11 h-11 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors shadow-sm cursor-pointer"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollWaSlider("next")}
+                aria-label="Geser testimoni ke kanan"
+                className="w-11 h-11 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors shadow-sm cursor-pointer"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={waSliderRef}
+            className="flex gap-5 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {whatsappTestimonials.map((item, idx) => (
+              <motion.button
+                type="button"
+                key={item.id}
+                onClick={() => setSelectedTestiIndex(idx)}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: Math.min(idx * 0.05, 0.3) }}
+                className="group relative snap-start shrink-0 w-[210px] sm:w-[235px] md:w-[255px] aspect-[9/16] rounded-[24px] overflow-hidden bg-slate-900 border-2 border-slate-200 shadow-md hover:shadow-xl hover:border-teal-500 transition-all text-left cursor-pointer"
+              >
+                <img
+                  src={item.image}
+                  alt={`Screenshot WhatsApp ${item.label}`}
+                  className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                  <span className="text-xs font-semibold text-white">{item.label}</span>
+                  <span className="w-8 h-8 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                    <Maximize2 className="w-4 h-4" />
+                  </span>
+                </div>
+              </motion.button>
+            ))}
           </div>
         </div>
       </section>
@@ -538,57 +719,83 @@ export default function App() {
 
       {/* 5. Portfolio Section */}
       <section id="portfolio" className="py-24 bg-slate-900 text-white overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div className="max-w-2xl">
-              <h2 className="text-xs uppercase font-bold text-teal-400 tracking-widest mb-4">Portfolio Unggulan</h2>
-              <h3 className="text-4xl md:text-5xl font-bold mb-0">Showcase Karya Terbaik Kami</h3>
+              <p className="text-xs uppercase font-bold text-teal-400 tracking-widest mb-3">Portfolio Unggulan</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-3" style={{ textWrap: "balance" }}>Showcase Website Klien Kami</h2>
+              <p className="text-slate-300 text-base md:text-lg">
+                Desain website profesional, cepat, dan siap meningkatkan kredibilitas bisnis Anda.
+              </p>
             </div>
-            <a href="https://instagram.com/nusawebworks" className="flex items-center gap-2 text-teal-400 font-bold hover:gap-3 transition-all">
+            <a
+              href="https://instagram.com/nusawebworks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-teal-400 font-bold hover:gap-3 transition-all whitespace-nowrap shrink-0"
+            >
               Lihat di Instagram <Instagram className="w-5 h-5" />
             </a>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-             {portfolioItems.map((item, idx) => (
-               <motion.div 
-                key={idx}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+            {portfolioItems.map((item, idx) => (
+              <motion.article
+                key={item.link}
                 id={`portfolio-card-${idx}`}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="group relative rounded-3xl overflow-hidden aspect-video"
-               >
-                 <img 
-                   id={`portfolio-image-${idx}`}
-                   src={item.image} 
-                   alt={item.title} 
-                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                 />
-                 {/* Visual Gradient Overlay - Pointer events disabled so image is selectable */}
-                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent pointer-events-none"></div>
-                 
-                 {/* Content Wrapper */}
-                 <div className="absolute inset-0 flex flex-col justify-end p-8 pointer-events-none">
-                    <div className="pointer-events-auto">
-                      <div className="text-[10px] uppercase font-bold text-teal-400 mb-1 tracking-widest">{item.category}</div>
-                      <h4 className="text-2xl font-bold mb-3">{item.title}</h4>
-                      <p className="text-slate-300 text-sm mb-6 line-clamp-2 transition-all duration-500">{item.description}</p>
-                      <div className="flex items-center gap-4 transition-all duration-500">
-                        <a 
-                          href={item.link || "#"} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="px-5 py-2 bg-white text-slate-900 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-teal-400 hover:scale-105 transition-all shadow-lg"
-                        >
-                          Visit Site <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
+                transition={{ delay: Math.min(idx * 0.06, 0.3) }}
+                className="group bg-slate-800/75 border border-slate-700/80 rounded-3xl overflow-hidden shadow-2xl hover:border-teal-400/70 transition-all flex flex-col"
+              >
+                {/* Rectangular Large Image Showcase (both mobile and desktop) */}
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block relative aspect-video w-full overflow-hidden bg-slate-950 border-b border-slate-700/70"
+                >
+                  <img
+                    id={`portfolio-image-${idx}`}
+                    src={item.image}
+                    alt={`Tampilan Website ${item.title}`}
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                    referrerPolicy="no-referrer"
+                  />
+                </a>
+
+                {/* Clear Info Panel Below Image */}
+                <div className="p-6 md:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-5 flex-1">
+                  <div className="min-w-0">
+                    <div className="text-xs font-semibold text-teal-400 uppercase tracking-wider mb-1.5">
+                      {item.category}
                     </div>
-                 </div>
-               </motion.div>
-             ))}
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 truncate">
+                      {item.title}
+                    </h3>
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm md:text-base font-medium text-teal-300 hover:text-teal-200 underline underline-offset-4 break-all"
+                    >
+                      <Link2 className="w-4 h-4 shrink-0" />
+                      <span>{item.displayLink}</span>
+                    </a>
+                  </div>
+
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-3 bg-white text-slate-900 rounded-full text-sm font-bold inline-flex items-center justify-center gap-2 hover:bg-teal-400 hover:text-slate-950 transition-colors shadow-lg whitespace-nowrap shrink-0"
+                  >
+                    Kunjungi Website <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              </motion.article>
+            ))}
           </div>
         </div>
       </section>
@@ -765,7 +972,9 @@ export default function App() {
                  </div>
                  <p className="text-slate-600 mb-8 italic text-lg leading-relaxed">"{testi.comment}"</p>
                  <div className="mt-auto">
-                    <img src={testi.image} alt={testi.name} className="w-16 h-16 rounded-full mx-auto mb-4 border-4 border-teal-50" />
+                    <div className="w-14 h-14 rounded-full mx-auto mb-4 bg-teal-600 text-white font-bold text-lg flex items-center justify-center border-4 border-teal-50">
+                      {testi.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}
+                    </div>
                     <h4 className="font-bold text-slate-900">{testi.name}</h4>
                     <p className="text-xs font-bold text-teal-600 uppercase tracking-widest">{testi.business}</p>
                  </div>
@@ -837,9 +1046,9 @@ export default function App() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
             <div className="lg:col-span-1">
-              <a href="#" className="flex items-center gap-2 mb-6">
-                <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-teal-600/20">
-                  <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/685723216_2029139328017612_8112902953639267516_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=9f807c&_nc_ohc=_OLGFQspricQ7kNvwH7I9gF&_nc_oc=AdoC0Mlk2miJRk37sqYUpr05xmHOITrDaVYnivobZFf7sqoJfBrTTnej7SN-JKaC2Ihl5TSal9TIEynh3fWWy59d&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD5QEregPxwY88Mz8Alr0JrQyG6iWTwxtQCTQTiIH5_Rv_Gw&oe=6A2670D7" alt="NusaWebWorks Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <a href="#" className="flex items-center gap-2.5 mb-6">
+                <div className="w-10 h-10 rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm shrink-0">
+                  <img src={COMPANY_LOGO_URL} alt="NusaWebWorks Logo" className="w-full h-full object-contain p-0.5" referrerPolicy="no-referrer" />
                 </div>
                 <span className="text-2xl font-display font-bold tracking-tight text-slate-900">NusaWebWorks</span>
               </a>
@@ -919,6 +1128,65 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Lightbox Modal for 9:16 WhatsApp Testimonials */}
+      {selectedTestiIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSelectedTestiIndex(null)}
+        >
+          <div
+            className="relative flex items-center justify-center gap-3 md:gap-6 max-w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() =>
+                setSelectedTestiIndex((prev) =>
+                  prev === null ? 0 : (prev - 1 + whatsappTestimonials.length) % whatsappTestimonials.length
+                )
+              }
+              aria-label="Testimoni sebelumnya"
+              className="w-11 h-11 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer shrink-0"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <div className="relative w-[min(82vw,360px)] aspect-[9/16] rounded-[28px] overflow-hidden bg-slate-900 border-2 border-white/20 shadow-2xl">
+              <img
+                src={whatsappTestimonials[selectedTestiIndex].image}
+                alt={`Screenshot WhatsApp ${whatsappTestimonials[selectedTestiIndex].label}`}
+                className="w-full h-full object-contain bg-slate-950"
+                referrerPolicy="no-referrer"
+              />
+              <button
+                type="button"
+                onClick={() => setSelectedTestiIndex(null)}
+                aria-label="Tutup preview"
+                className="absolute top-3 right-3 w-9 h-9 rounded-full bg-slate-900/80 text-white flex items-center justify-center hover:bg-slate-900 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-slate-900/80 text-white text-xs font-medium tabular-nums">
+                {selectedTestiIndex + 1} / {whatsappTestimonials.length}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                setSelectedTestiIndex((prev) =>
+                  prev === null ? 0 : (prev + 1) % whatsappTestimonials.length
+                )
+              }
+              aria-label="Testimoni berikutnya"
+              className="w-11 h-11 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer shrink-0"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
